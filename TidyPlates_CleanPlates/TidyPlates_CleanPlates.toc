@@ -1,0 +1,22 @@
+## Interface: 30300
+## Title: Tidy Plates: |c00ff00ffClean Plates|r v1.9g
+## Notes: Requires Tidy Plates! Clean Plates theme by Syronius.
+## Author: Syronius of Black Dragonflight
+## Version: 1.9g
+## SavedVariables: CPDB
+## Dependencies: TidyPlates
+## OptionalDeps: Ace3, LibSharedMedia-3.0
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+embeds.xml
+
+CleanPlatesConfig.lua
+totem.lua
+empty.lua
+pet.lua
+normal.lua
+special.lua
+
+
+
