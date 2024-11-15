@@ -12,6 +12,7 @@ Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 embeds.xml
 
 CleanPlatesConfig.lua
+extensions.lua
 totem.lua
 empty.lua
 pet.lua

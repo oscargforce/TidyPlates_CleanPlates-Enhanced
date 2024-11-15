@@ -138,6 +138,14 @@ theme.partyIcons = {
 	anchor = "CENTER",
 }
 
+theme.petIcons = {
+	width = 22,
+	height = 22,
+	x = -74,
+	y = -2,
+	anchor = "CENTER",
+}
+
 theme.specialArt = {
 	width = 24,
 	height = 24,
@@ -203,6 +211,7 @@ theme.options = {
 	showSpecialText = false,
 	showSpecialText2 = false,
 	showPartyIcons = false,
+	showPetIcons = false,
 	showSpecialArt = false,
 	showDangerSkull = true,
 	showSpellIcon = true,

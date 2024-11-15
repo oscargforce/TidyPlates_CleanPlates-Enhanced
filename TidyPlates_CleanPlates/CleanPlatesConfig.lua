@@ -1,4 +1,3 @@
-
 CP = LibStub("AceAddon-3.0"):NewAddon("CP", "AceConsole-3.0")
 local Media = LibStub("LibSharedMedia-3.0")
 local DataBroker = LibStub:GetLibrary("LibDataBroker-1.1",true)
@@ -15,13 +14,13 @@ function CP:OnInitialize()
 			Desc = {
 				type = "description",
 				order = 1,
-				name = "Clear and easy to use nameplate theme for use with TidyPlates.\nFeel free to email me at |cff00ff00Shamtasticle@gmail.com|r\nSyronius, of Black Dragonflight - US <Fallout>",
+				name = "Clear and easy to use nameplate theme for use with TidyPlates.\nFeel free to email me on charracter Isobella, on Warmane Icecrown, with any questions or comments.",
 			},
 --[[Options Frames]]--
 			header = {
 				order = 2,
 				type = "header",
-				name = "Tidy Plates: Clean Plates v1.9g",
+				name = "Tidy Plates: Clean Plates v2.0.0",
 			},
 			TextOptFrame = {
 		        order = 1,
@@ -108,170 +107,486 @@ function CP:OnInitialize()
 					IconHeader = {
 						order = 1,
 						type = "header",
-						name = "Icon Options",
+						name = "Faction Champion Boss Icons",
 					},
-					classiconsdesc = {
-						order = 2,
-						type = "description",
-						name = "\nClass icons are used to show which classes PvP flagged players are with a wow icon of their class on their nameplate.\n",
-					},
-					classicons = {
-						order = 3,
-						type = "toggle",
-						name = "Show PvP Class Icons",
-						desc = "Toggles the showing and hiding of class icons on PvP flagged players",
-						get = function() return self.db.profile.classicons end,
-						set = function(info,val) 
-							self.db.profile.classicons = not self.db.profile.classicons
-							if self.db.profile.classicons then return print("-->>Class Icons are now |cff00ff00ON!|r<<--") else return print("-->>Class Icons are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					classiconsWidth = {
-						type = "range",
-						order = 4,
-						name = "|cffffffffPvP Icon Width|r",
-						desc = "For best looks, keep this the same as the height. Default is 22.",
-						get = function(info) return self.db.profile.classiconsWidth end,
-						set = function(info,v)
-							self.db.profile.classiconsWidth = v
-							TidyPlatesThemeList.CP.normal.specialArt.width = v
+					EnemyClassIcons = {
+						order = 1,
+						type = "group",
+						name = "Enemy Class Icons",
+						desc = "Configure options for PvP Icons.",
+						args = {
+							IconHeader = {
+								order = 1,
+								type = "header",
+								name = "Enemy Class Icons",
+							},
+							classiconsdesc = {
+								order = 2,
+								type = "description",
+								name = "\nEnemy class icons help identify the classes of opponents, making them especially useful for DPS players in arenas.\n\nWhen enabled, this feature places a class icon next to each enemy's health bar. NOTE only works on PvP flagged players.\n",
+							},
+							classicons = {
+								order = 3,
+								type = "toggle",
+								name = "Show PvP Class Icons",
+								desc = "Toggles the showing and hiding of class icons on PvP flagged players",
+								get = function() return self.db.profile.classicons end,
+								set = function(info,val) 
+									self.db.profile.classicons = not self.db.profile.classicons
+									if self.db.profile.classicons then return print("-->>Class Icons are now |cff00ff00ON!|r<<--") else return print("-->>Class Icons are now |cffff0000OFF!|r<<--") end
+								end
+							},
+							classiconsWidth = {
+								type = "range",
+								order = 4,
+								name = "|cffffffffClass Icon Width|r",
+								desc = "For best looks, keep this the same as the height. Default is 22.",
+								get = function(info) return self.db.profile.classiconsWidth end,
+								set = function(info,v)
+									self.db.profile.classiconsWidth = v
+									TidyPlatesThemeList.CP.normal.specialArt.width = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.classicons end,  -- Disable if partyicons is false
-					},
-					classiconsHeight = {
-						type = "range",
-						order = 5,
-						name = "|cffffffffPvP Icon Height|r",
-						desc = "For best looks, keep this the same as the width. Default is 22.",
-						get = function(info) return self.db.profile.classiconsHeight end,
-						set = function(info,v)
-							self.db.profile.classiconsHeight = v
-							TidyPlatesThemeList.CP.normal.specialArt.height = v
+								step = 0.5,
+								min = 10,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
+							},
+							classiconsHeight = {
+								type = "range",
+								order = 5,
+								name = "|cffffffffClass Icon Height|r",
+								desc = "For best looks, keep this the same as the width. Default is 22.",
+								get = function(info) return self.db.profile.classiconsHeight end,
+								set = function(info,v)
+									self.db.profile.classiconsHeight = v
+									TidyPlatesThemeList.CP.normal.specialArt.height = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
-					},
-					classiconsY = {
-						type = "range",
-						order = 6,
-						name = "|cffffffffPvP Icon Y|r",
-						desc = "Default is -2, adjust to move the icon up or down.",
-						get = function(info) return self.db.profile.classiconsY end,
-						set = function(info,v)
-							self.db.profile.classiconsY = v
-							TidyPlatesThemeList.CP.normal.specialArt.y = v
+								step = 0.5,
+								min = 10,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
+							},
+							classiconsY = {
+								type = "range",
+								order = 6,
+								name = "|cffffffffClass Icon Y|r",
+								desc = "Default is -2, adjust to move the icon up or down.",
+								get = function(info) return self.db.profile.classiconsY end,
+								set = function(info,v)
+									self.db.profile.classiconsY = v
+									TidyPlatesThemeList.CP.normal.specialArt.y = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = -20,
-						max = 60,
-						isPercent = false,
-						disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
-					},
-					classiconsX = {
-						type = "range",
-						order = 7,
-						name = "|cffffffffPvP Icon X|r",
-						desc = "Default is -74, adjust to move the icon left or right.",
-						get = function(info) return self.db.profile.classiconsX end,
-						set = function(info,v)
-							self.db.profile.classiconsX = v
-							TidyPlatesThemeList.CP.normal.specialArt.x = v
+								step = 0.5,
+								min = -20,
+								max = 60,
+								isPercent = false,
+								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
+							},
+							classiconsX = {
+								type = "range",
+								order = 7,
+								name = "|cffffffffClass Icon X|r",
+								desc = "Default is -74, adjust to move the icon left or right.",
+								get = function(info) return self.db.profile.classiconsX end,
+								set = function(info,v)
+									self.db.profile.classiconsX = v
+									TidyPlatesThemeList.CP.normal.specialArt.x = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = -80,
-						max = 80,
-						isPercent = false,
-						disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
+								step = 0.5,
+								min = -80,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
+							},
+						},
 					},
-					partyicons = {
-						order = 8,
-						type = "toggle",
-						name = "Show Party Class Icons",
-						desc = "Toggles the showing and hiding of class icons on raid/party members",
-						get = function() return self.db.profile.partyicons end,
-						set = function(info,val) 
-							self.db.profile.partyicons = not self.db.profile.partyicons
-							if self.db.profile.partyicons then return print("-->>Party Icons are now |cff00ff00ON!|r<<--") else return print("-->>Party Icons are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					partyiconsWidth = {
-						type = "range",
-						order = 9,
-						name = "|cffffffffParty Icon Width|r",
-						desc = "For best looks, keep this the same as the height. Default is 22.",
-						get = function(info) return self.db.profile.partyiconsWidth end,
-						set = function(info,v)
-							self.db.profile.partyiconsWidth = v
-							TidyPlatesThemeList.CP.normal.partyIcons.width = v
+					PartyClassIcons = {
+						order = 1,
+						type = "group",
+						name = "Party Class Icons",
+						desc = "Configure options for Party/raid Icons.",
+						args = {
+							IconHeader = {
+								order = 1,
+								type = "header",
+								name = "Party/Raid Class Icons",
+							},
+							classiconsdesc = {
+								order = 2,
+								type = "description",
+								name = "\nParty/Raid class icons help identify the location of players, making it especially useful for healers in arenas.\n\nWhen enabled, this feature places a class icon next to each player's health bar in your party/raid\n",
+							},
+							partyicons = {
+								order = 3,
+								type = "toggle",
+								name = "Show Party Class Icons",
+								desc = "Toggles the showing and hiding of class icons on raid/party members",
+								get = function() return self.db.profile.partyicons end,
+								set = function(info,val) 
+									self.db.profile.partyicons = not self.db.profile.partyicons
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.partyicons then return print("-->>Party Icons are now |cff00ff00ON!|r<<--") else return print("-->>Party Icons are now |cffff0000OFF!|r<<--") end
+								end
+							},
+							partyiconsWidth = {
+								type = "range",
+								order = 4,
+								name = "|cffffffffParty Icon Width|r",
+								desc = "For best looks, keep this the same as the height. Default is 22.",
+								get = function(info) return self.db.profile.partyiconsWidth end,
+								set = function(info,v)
+									self.db.profile.partyiconsWidth = v
+									TidyPlatesThemeList.CP.normal.partyIcons.width = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
-					},
-					partyiconsHeight = {
-						type = "range",
-						order = 10,
-						name = "|cffffffffParty Icon Height|r",
-						desc = "For best looks, keep this the same as the width. Default is 22.",
-						get = function(info) return self.db.profile.partyiconsHeight end,
-						set = function(info,v)
-							self.db.profile.partyiconsHeight = v
-							TidyPlatesThemeList.CP.normal.partyIcons.height = v
+								step = 0.5,
+								min = 10,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+							},
+							partyiconsHeight = {
+								type = "range",
+								order = 5,
+								name = "|cffffffffParty Icon Height|r",
+								desc = "For best looks, keep this the same as the width. Default is 22.",
+								get = function(info) return self.db.profile.partyiconsHeight end,
+								set = function(info,v)
+									self.db.profile.partyiconsHeight = v
+									TidyPlatesThemeList.CP.normal.partyIcons.height = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
-					},
-					partyiconsY = {
-						type = "range",
-						order = 11,
-						name = "|cffffffffParty Icon Y|r",
-						desc = "Default is -2, adjust to move the icon up or down.",
-						get = function(info) return self.db.profile.partyiconsY end,
-						set = function(info,v)
-							self.db.profile.partyiconsY = v
-							TidyPlatesThemeList.CP.normal.partyIcons.y = v
+								step = 0.5,
+								min = 10,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+							},
+							partyiconsY = {
+								type = "range",
+								order = 6,
+								name = "|cffffffffParty Icon Y|r",
+								desc = "Default is -2, adjust to move the icon up or down.",
+								get = function(info) return self.db.profile.partyiconsY end,
+								set = function(info,v)
+									self.db.profile.partyiconsY = v
+									TidyPlatesThemeList.CP.normal.partyIcons.y = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = -20,
-						max = 60,
-						isPercent = false,
-						disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
-					},
-					partyiconsX = {
-						type = "range",
-						order = 12,
-						name = "|cffffffffParty Icon X|r",
-						desc = "Default is -74, adjust to move the icon left or right.",
-						get = function(info) return self.db.profile.partyiconsX end,
-						set = function(info,v)
-							self.db.profile.partyiconsX = v
-							TidyPlatesThemeList.CP.normal.partyIcons.x = v
+								step = 0.5,
+								min = -20,
+								max = 60,
+								isPercent = false,
+								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+							},
+							partyiconsX = {
+								type = "range",
+								order = 7,
+								name = "|cffffffffParty Icon X|r",
+								desc = "Default is -74, adjust to move the icon left or right.",
+								get = function(info) return self.db.profile.partyiconsX end,
+								set = function(info,v)
+									self.db.profile.partyiconsX = v
+									TidyPlatesThemeList.CP.normal.partyIcons.x = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
 								end,								
-						step = 0.5,
-						min = -80,
-						max = 80,
-						isPercent = false,
-						disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+								step = 0.5,
+								min = -80,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+							},
+						},
+					},
+					PetIcons = {
+						order = 1,
+						type = "group",
+						name = "Pet Icons",
+						desc = "Configure options for Party/raid Pets Icons.",
+						args = {
+							IconHeader = {
+								order = 1,
+								type = "header",
+								name = "Party/raid Pets Icons",
+							},
+							petIconsDesc = {
+								order = 2,
+								type = "description",
+								name = "\nParty/Raid pet icons make it easier to locate and identify pets in combat.\n\nWhen enabled, this feature places an icon next to each party/raid member's pet health bar, helping you quickly spot their pets during encounters.\n",
+							},
+							showPetIcons = {
+								order = 3,
+								type = "toggle",
+								name = "Show Pet Icons",
+								desc = "Toggle the display of an icon on party and raid members pets.",
+								get = function() return self.db.profile.showPetIcons end,
+								set = function(info,val) 
+									self.db.profile.showPetIcons = not self.db.profile.showPetIcons
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.showPetIcons then return print("-->>Pet Icons are now |cff00ff00ON!|r<<--") else return print("-->>Pet Icons are now |cffff0000OFF!|r<<--") end
+								end
+							},
+							petIconsWidth = {
+								type = "range",
+								order = 4,
+								name = "|cffffffffPet Icon Width|r",
+								desc = "For best looks, keep this the same as the height. Default is 22.",
+								get = function(info) return self.db.profile.petIconsWidth end,
+								set = function(info,v)
+									self.db.profile.petIconsWidth = v
+									TidyPlatesThemeList.CP.normal.petIcons.width = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = 10,
+								max = 100,
+								isPercent = false,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							petIconsHeight = {
+								type = "range",
+								order = 5,
+								name = "|cffffffffPet Icon Height|r",
+								desc = "For best looks, keep this the same as the width. Default is 22.",
+								get = function(info) return self.db.profile.petIconsHeight end,
+								set = function(info,v)
+									self.db.profile.petIconsHeight = v
+									TidyPlatesThemeList.CP.normal.petIcons.height = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = 10,
+								max = 100,
+								isPercent = false,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							petIconsY = {
+								type = "range",
+								order = 6,
+								name = "|cffffffffPet Icon Y|r",
+								desc = "Default is -2, adjust to move the icon up or down.",
+								get = function(info) return self.db.profile.petIconsY end,
+								set = function(info,v)
+									self.db.profile.petIconsY = v
+									TidyPlatesThemeList.CP.normal.petIcons.y = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = -20,
+								max = 60,
+								isPercent = false,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							petIconsX = {
+								type = "range",
+								order = 7,
+								name = "|cffffffffPet Icon X|r",
+								desc = "Default is -74, adjust to move the icon left or right.",
+								get = function(info) return self.db.profile.petIconsX end,
+								set = function(info,v)
+									self.db.profile.petIconsX = v
+									TidyPlatesThemeList.CP.normal.petIcons.x = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = -80,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							displayHeader = {
+								order = 8,
+								type = "header",
+								name = "Show for Creatures",
+							},
+							showBeastPetIcon = {
+								order = 9,
+								type = "toggle",
+								name = "Beast pets",
+								desc = "Toggle the display of a pet icon for Beast pets within the party or raid.",
+								get = function() return self.db.profile.showBeastPetIcon end,
+								set = function(info,val) 
+									self.db.profile.showBeastPetIcon = not self.db.profile.showBeastPetIcon
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.showBeastPetIcon then return print("-->>Pet Icons for Beasts are now |cff00ff00ON!|r<<--") else return print("-->>Pet Icons for Beasts are now |cffff0000OFF!|r<<--") end
+								end,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							showDemonPetIcon = {
+								order = 10,
+								type = "toggle",
+								name = "Demon pets",
+								desc = "Toggle the display of a pet icon for Demon pets within the party or raid.",
+								get = function() return self.db.profile.showDemonPetIcon end,
+								set = function(info,val) 
+									self.db.profile.showDemonPetIcon = not self.db.profile.showDemonPetIcon
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.showDemonPetIcon then return print("-->>Pet Icons for Demons are now |cff00ff00ON!|r<<--") else return print("-->>Pet Icons for Demons are now |cffff0000OFF!|r<<--") end
+								end,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							showUndeadPetIcon = {
+								order = 11,
+								type = "toggle",
+								name = "Undead pets",
+								desc = "Toggle the display of a pet icon for Undead pets within the party or raid.",
+								get = function() return self.db.profile.showUndeadPetIcon end,
+								set = function(info,val) 
+									self.db.profile.showUndeadPetIcon = not self.db.profile.showUndeadPetIcon
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.showUndeadPetIcon then return print("-->>Pet Icons for Undead are now |cff00ff00ON!|r<<--") else return print("-->>Pet Icons for Undead are now |cffff0000OFF!|r<<--") end
+								end,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+							showElementalPetIcon = {
+								order = 12,
+								type = "toggle",
+								name = "Elemental pets",
+								desc = "Toggle the display of a pet icon for Elemental pets within the party or raid.",
+								get = function() return self.db.profile.showElementalPetIcon end,
+								set = function(info,val) 
+									self.db.profile.showElementalPetIcon = not self.db.profile.showElementalPetIcon
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+									if self.db.profile.showElementalPetIcon then return print("-->>Pet Icons for Elementals are now |cff00ff00ON!|r<<--") else return print("-->>Pet Icons for Elementals are now |cffff0000OFF!|r<<--") end
+								end,
+								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
+							},
+						},
+					},
+					TotemIcons = {
+						order = 1,
+						type = "group",
+						name = "Totem Icons",
+						desc = "Configure options for Totem Icons.",
+						args = {
+							IconHeader = {
+								order = 1,
+								type = "header",
+								name = "Totem Icons",
+							},
+							totemsdesc = {
+								order = 2,
+								type = "description",
+								name = "\nTotem icons are shown next to the nameplates of dropped totems. This includes totems from Faction Champions.\n",
+							},
+							totems = {
+								order = 3,
+								type = "toggle",
+								name = "Show Totem Icons",
+								desc = "Toggles the showing and hiding of totem icons.",
+								get = function() return self.db.profile.totems end,
+								set = function(info,val) 
+									self.db.profile.totems = not self.db.profile.totems
+									if self.db.profile.totems then return print("-->>Totem Icons are now |cff00ff00ON!|r<<--") else return print("-->>Totem Icons are now |cffff0000OFF!|r<<--") end
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end
+							},
+							totemiconsWidth = {
+								type = "range",
+								order = 4,
+								name = "|cffffffffTotem Icon Width|r",
+								desc = "For best looks, keep this the same as the height. Default is 26.",
+								get = function(info) return self.db.profile.totemiconsWidth end,
+								set = function(info,v)
+									self.db.profile.totemiconsWidth = v
+									TidyPlatesThemeList.CP.totem.specialArt.width = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = 10,
+								max = 50,
+								isPercent = false,
+								disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
+							},
+							totemiconsHeight = {
+								type = "range",
+								order = 5,
+								name = "|cffffffffTotem Icon Height|r",
+								desc = "For best looks, keep this the same as the width. Default is 26.",
+								get = function(info) return self.db.profile.totemiconsHeight end,
+								set = function(info,v)
+									self.db.profile.totemiconsHeight = v
+									TidyPlatesThemeList.CP.totem.specialArt.height = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = 10,
+								max = 50,
+								isPercent = false,
+								disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
+							},
+							totemiconsY = {
+								type = "range",
+								order = 6,
+								name = "|cffffffffTotem Icon Y|r",
+								desc = "Default value is 0, adjust to move the icon up or down.",
+								get = function(info) return self.db.profile.totemiconsY end,
+								set = function(info,v)
+									self.db.profile.totemiconsY = v
+									TidyPlatesThemeList.CP.totem.specialArt.y = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = -20,
+								max = 60,
+								isPercent = false,
+								disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
+							},
+							totemiconsX = {
+								type = "range",
+								order = 7,
+								name = "|cffffffffTotem Icon X|r",
+								desc = "Default value is 0, adjust to move the icon left or right.",
+								get = function(info) return self.db.profile.totemiconsX end,
+								set = function(info,v)
+									self.db.profile.totemiconsX = v
+									TidyPlatesThemeList.CP.totem.specialArt.x = v
+									TidyPlates:ReloadTheme()
+									TidyPlates:ForceUpdate()
+								end,								
+								step = 0.5,
+								min = -80,
+								max = 80,
+								isPercent = false,
+								disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
+							},
+						},
 					},
 					fcicondesc = {
-						order = 13,
+						order = 2,
 						type = "description",
 						name = '\nFaction Champion class icons work just like PvP Class icons.\n',
 					},
 					fcicons = {
-						order = 14,
+						order = 3,
 						type = "toggle",
 						name = "Show Boss Class Icons",
 						desc = "Toggles the showing and hiding of Faction Champion class icons",
@@ -281,93 +596,259 @@ function CP:OnInitialize()
 							if self.db.profile.fcicons then return print("-->>Faction Champion Class Icons are now |cff00ff00ON!|r<<--") else return print("-->>Faction Champion Class Icons are now |cffff0000OFF!|r<<--") end
 						end
 					},
-					totemsdesc = {
-						order = 15,
-						type = "description",
-						name = "\nTotem icons are shown next to the nameplates of dropped totems. This includes totems from Faction Champions.\n",
-					},
-					totems = {
-						order = 16,
-						type = "toggle",
-						name = "Show Totem Icons",
-						desc = "Toggles the showing and hiding of totem icons.",
-						get = function() return self.db.profile.totems end,
-						set = function(info,val) 
-							self.db.profile.totems = not self.db.profile.totems
-							if self.db.profile.totems then return print("-->>Totem Icons are now |cff00ff00ON!|r<<--") else return print("-->>Totem Icons are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					totemiconsWidth = {
-						type = "range",
-						order = 17,
-						name = "|cffffffffTotem Icon Width|r",
-						desc = "For best looks, keep this the same as the height. Default is 26.",
-						get = function(info) return self.db.profile.totemiconsWidth end,
-						set = function(info,v)
-							self.db.profile.totemiconsWidth = v
-							TidyPlatesThemeList.CP.totem.specialArt.width = v
-								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
-					},
-					totemiconsHeight = {
-						type = "range",
-						order = 18,
-						name = "|cffffffffTotem Icon Height|r",
-						desc = "For best looks, keep this the same as the width. Default is 26.",
-						get = function(info) return self.db.profile.totemiconsHeight end,
-						set = function(info,v)
-							self.db.profile.totemiconsHeight = v
-							TidyPlatesThemeList.CP.totem.specialArt.height = v
-								end,								
-						step = 0.5,
-						min = 10,
-						max = 50,
-						isPercent = false,
-						disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
-					},
-					totemiconsY = {
-						type = "range",
-						order = 19,
-						name = "|cffffffffTotem Icon Y|r",
-						desc = "Default value is 0, adjust to move the icon up or down.",
-						get = function(info) return self.db.profile.totemiconsY end,
-						set = function(info,v)
-							self.db.profile.totemiconsY = v
-							TidyPlatesThemeList.CP.totem.specialArt.y = v
-								end,								
-						step = 0.5,
-						min = -20,
-						max = 60,
-						isPercent = false,
-						disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
-					},
-					totemiconsX = {
-						type = "range",
-						order = 20,
-						name = "|cffffffffTotem Icon X|r",
-						desc = "Default value is -0, adjust to move the icon left or right.",
-						get = function(info) return self.db.profile.totemiconsX end,
-						set = function(info,v)
-							self.db.profile.totemiconsX = v
-							TidyPlatesThemeList.CP.totem.specialArt.x = v
-								end,								
-						step = 0.5,
-						min = -80,
-						max = 80,
-						isPercent = false,
-						disabled = function() return not self.db.profile.totems end,  -- Disable if totems is false
-					},
 				},
 			},
 			NameplateOptFrame = {
 		        order = 3,
 		        type  = "group",
        			name  = "Nameplate Options",
-		        args = {
+		        args = {				
+					NamePlatesColorHeader = {
+						order = 1,
+						type = "header",
+						name = "Color Options",
+					},
+					NamePlatesColordesc = {
+						order = 2,
+						type = "description",
+						name = "\nSet friendly health bar colors and toggle the display of nameplates for various objects.\n",
+					},
+					friendlyHealthBarColor = {
+						type = "color",
+						order = 3,
+						name = "Friendly Health Bar Color",
+						desc = "Set the color of health bars for friendly players.",
+						get = function(info)
+							-- Retrieve the saved color from the database, or use a default green if not set
+							 local color = self.db.profile.friendlyHealthBarColor
+							 return color.r, color.g, color.b, color.a
+						end,
+						set = function(info, r, g, b, a)
+							-- Save the chosen color to the database
+							self.db.profile.friendlyHealthBarColor = { r = r, g = g, b = b, a = a }
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
+						end,
+						hasAlpha = true,  -- Enable opacity control for the color picker
+					},
+					NamePlatesDisplayHeader = {
+						order = 4,
+						type = "header",
+						name = "Display Options",
+					},
+					NamePlatesDisplaydesc = {
+						order = 5,
+						type = "description",
+						name = "\nToggle the display of art and health bar on or off\n"
+					},
+					showPlayerNames = {
+						order = 6,
+						type = "toggle",
+						name = "Show Player Names",
+						desc = "Toggle the showing and hiding of player names.",
+						get = function() return self.db.profile.showPlayerNames end,
+						set = function(info,val) 
+							self.db.profile.showPlayerNames = val
+							TidyPlatesThemeList.CP.normal.options.showName = val
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
+							if self.db.profile.showPlayerNames then return print("-->>Showing player names on nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Showing player names on nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					showPetNames = {
+						order = 7,
+						type = "toggle",
+						name = "Show Pet Names",
+						desc = "The main pet remains linked to players. The option below specifically controls the display of names for summoned entities such as treants, snake traps, mirror images, water elementals, spirit wolves and shadowfiend.",
+						get = function() return self.db.profile.showPetNames end,
+						set = function(info,val) 
+							self.db.profile.showPetNames = val
+							TidyPlatesThemeList.CP.pet.options.showName = val
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
+							if self.db.profile.showPetNames then return print("-->>Showing pet names on nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Showing pet names on nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					showTotemNames = {
+						order = 8,
+						type = "toggle",
+						name = "Show Totem Names",
+						desc = "Toggle the showing and hiding of totem names.",
+						get = function() return self.db.profile.showTotemNames end,
+						set = function(info,val) 
+							self.db.profile.showTotemNames = val
+							TidyPlatesThemeList.CP.totem.options.showName = val
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
+							if self.db.profile.showTotemNames then return print("-->>Showing totem names on nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Showing totem names on nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					showLevel = {
+						order = 9,
+						type = "toggle",
+						name = "Show Player Level",
+						desc = "Toggle the showing and hiding of the player level.",
+						get = function() return self.db.profile.showLevel end,
+						set = function(info,val) 
+							self.db.profile.showLevel = val
+							TidyPlatesThemeList.CP.normal.options.showLevel = val
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
+							if self.db.profile.showLevel then return print("-->>Showing level on nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Showing level on nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					worms = {
+						order = 10,
+						type = "toggle",
+						name = "Bloodworms",
+						desc = "Toggles the showing and hiding of bloodworm nameplates.",
+						get = function() return self.db.profile.showworms end,
+						set = function(info,val) 
+							self.db.profile.showworms = not self.db.profile.showworms
+							if self.db.profile.showworms then return print("-->>Bloodworm Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Bloodworm Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					images = {
+						order = 11,
+						type = "toggle",
+						name = "Mirror Images",
+						desc = "Toggles the showing and hiding of Mirror Image nameplates.",
+						get = function() return self.db.profile.showimages end,
+						set = function(info,val) 
+							self.db.profile.showimages = not self.db.profile.showimages
+							if self.db.profile.showimages then return print("-->>Mirror Image Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Mirror Image Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					fiends = {
+						order = 12,
+						type = "toggle",
+						name = "Shadowfiends",
+						desc = "Toggles the showing and hiding of Shadowfiend nameplates.",
+						get = function() return self.db.profile.showfiends end,
+						set = function(info,val) 
+							self.db.profile.showfiends = not self.db.profile.showfiends
+							if self.db.profile.showfiends then return print("-->>Shadowfiend Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Shadowfiend Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					snakes = {
+						order = 13,
+						type = "toggle",
+						name = "Snake Traps",
+						desc = "Toggles the showing and hiding of snake trap nameplates.",
+						get = function() return self.db.profile.showsnakes end,
+						set = function(info,val) 
+							self.db.profile.showsnakes = not self.db.profile.showsnakes
+							if self.db.profile.showsnakes then return print("-->>Snake Trap Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Snake Trap Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					wolves = {
+						order = 14,
+						type = "toggle",
+						name = "Spirit Wolves",
+						desc = "Toggles the showing and hiding of spirit wolf nameplates.",
+						get = function() return self.db.profile.showwolves end,
+						set = function(info,val) 
+							self.db.profile.showwolves = not self.db.profile.showwolves
+							if self.db.profile.showwolves then return print("-->>Spirit Wolf Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Spirit Wolf Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					treants = {
+						order = 15,
+						type = "toggle",
+						name = "Treants",
+						desc = "Toggles the showing and hiding of treant nameplates.",
+						get = function() return self.db.profile.showtreants end,
+						set = function(info,val) 
+							self.db.profile.showtreants = not self.db.profile.showtreants
+							if self.db.profile.showtreants then return print("-->>Treant Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Treant Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					elementals = {
+						order = 16,
+						type = "toggle",
+						name = "Water Elementals",
+						desc = "Toggles the showing and hiding of Water Elemental nameplates.",
+						get = function() return self.db.profile.showelementals end,
+						set = function(info,val) 
+							self.db.profile.showelementals = not self.db.profile.showelementals
+							if self.db.profile.showelementals then return print("-->>Water Elemental Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Water Elemental Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					ghouls = {
+						order = 17,
+						type = "toggle",
+						name = "Army Ghouls",
+						desc = "Toggles the showing and hiding of Army of the Dead Ghoul nameplates.",
+						get = function() return self.db.profile.showghouls end,
+						set = function(info,val) 
+							self.db.profile.showghouls = not self.db.profile.showghouls
+							if self.db.profile.showghouls then return print("-->>Army Ghoul Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Army Ghoul Nameplates are now |cffff0000OFF!|r<<--") end
+						end
+					},
+					AlphaSettings = {
+						order = 1,
+						type = "group",
+						name = "Alpha Settings",
+						desc = "Configure Alpha settings for nameplates.",
+						args = {
+							IconHeader = {
+								order = 1,
+								type = "header",
+								name = "Alpha Settings",
+							},
+							classiconsdesc = {
+								order = 2,
+								type = "description",
+								name = "\nEnable 'Target Highlight Art' if the non-target alpha is set to 0 for better visibility\n",
+							},
+							nonTargetAlphaValue = {
+								type = "range",
+								order = 3,
+								desc = "Adjust the transparency of non-target nameplates",
+								name = "Non-Target Alpha",
+								get = function() return self.db.profile.nonTargetAlphaValue end,
+								set = function(info, val)
+									self.db.profile.nonTargetAlphaValue = val
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
+								    end,
+								min = -1,
+								max = 0,
+								step = 0.01,
+								isPercent = true,
+							},
+							showTargetHighlightArt = {
+								order = 4,
+								type = "toggle",
+								name = "Highlight Target Art",
+								desc = "Toggle the display of additional art on the target nameplate to improve visibility of your current target.",
+								get = function() return self.db.profile.showTargetHighlightArt end,
+								set = function(info,val) 
+									self.db.profile.showTargetHighlightArt = not self.db.profile.showTargetHighlightArt
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
+									if self.db.profile.showTargetHighlightArt then return print("-->>Highlight Target Art is now |cff00ff00ON!|r<<--") else return print("-->>Highlight Target Art is now |cffff0000OFF!|r<<--") end
+								end
+							},
+							selectedTargetHighlightArt = {
+								order = 5,
+								type = "select",
+								name = "Select Target Art",
+								desc = "Choose the art style for the target highlight",
+								values = {
+									["gold"] = "Golden Highlight", 
+									["white"] = "White Highlight"
+								},
+								get = function(info) return self.db.profile.selectedTargetHighlightArt end,
+								set = function(info, value) 
+									self.db.profile.selectedTargetHighlightArt = value
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
+								end,
+								disabled = function() return not self.db.profile.showTargetHighlightArt end,  -- Disable if showTargetHighlightArt is false
+							},
+						},
+					},
 					ScaleOptions = {
 						type = "group",
 						order = 1,
@@ -390,6 +871,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Normal_scale end,
 								set 	= function(info,v)
 											self.db.profile.Normal_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -403,6 +886,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Elite_scale end,
 								set 	= function(info,v)
 											self.db.profile.Elite_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -416,6 +901,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Boss_scale end,
 								set 	= function(info,v)
 											self.db.profile.Boss_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -429,6 +916,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Pet_scale end,
 								set 	= function(info,v)
 											self.db.profile.Pet_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -442,6 +931,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Totem_scale end,
 								set 	= function(info,v)
 											self.db.profile.Totem_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -455,6 +946,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Special_scale end,
 								set 	= function(info,v)
 											self.db.profile.Special_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -468,6 +961,8 @@ function CP:OnInitialize()
 								get 	= function(info) return self.db.profile.Empty_scale end,
 								set 	= function(info,v)
 											self.db.profile.Empty_scale = v
+											TidyPlates:ReloadTheme()
+											TidyPlates:ForceUpdate()
 										end,								
 								step = 0.05,
 								min = 0.3,
@@ -475,122 +970,7 @@ function CP:OnInitialize()
 								isPercent = true,
 							},
 						},
-					},					
-					NamePlatesHeader = {
-						order = 1,
-						type = "header",
-						name = "Nameplate Options",
-					},
-					NamePlatesdesc = {
-						order = 2,
-						type = "description",
-						name = "\nSet friendly health bar colors and toggle the display of nameplates for various objects:\n",
-					},
-					friendlyHealthBarColor = {
-						type = "color",
-						order = 3,
-						name = "Friendly Health Bar Color",
-						desc = "Set the color of health bars for friendly players.",
-						get = function(info)
-							-- Retrieve the saved color from the database, or use a default green if not set
-							 local color = self.db.profile.friendlyHealthBarColor
-							 return color.r, color.g, color.b, color.a
-						end,
-						set = function(info, r, g, b, a)
-							-- Save the chosen color to the database
-							self.db.profile.friendlyHealthBarColor = { r = r, g = g, b = b, a = a }
-							-- Apply the new color to friendly health bars as needed
-						end,
-						hasAlpha = true,  -- Enable opacity control for the color picker
-					},
-					worms = {
-						order = 4,
-						type = "toggle",
-						name = "Bloodworms",
-						desc = "Toggles the showing and hiding of bloodworm nameplates.",
-						get = function() return self.db.profile.showworms end,
-						set = function(info,val) 
-							self.db.profile.showworms = not self.db.profile.showworms
-							if self.db.profile.showworms then return print("-->>Bloodworm Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Bloodworm Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					images = {
-						order = 5,
-						type = "toggle",
-						name = "Mirror Images(Not working)",
-						desc = "Toggles the showing and hiding of Mirror Image nameplates.",
-						get = function() return self.db.profile.showimages end,
-						set = function(info,val) 
-							self.db.profile.showimages = not self.db.profile.showimages
-							if self.db.profile.showimages then return print("-->>Mirror Image Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Mirror Image Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					fiends = {
-						order = 6,
-						type = "toggle",
-						name = "Shadowfiends",
-						desc = "Toggles the showing and hiding of Shadowfiend nameplates.",
-						get = function() return self.db.profile.showfiends end,
-						set = function(info,val) 
-							self.db.profile.showfiends = not self.db.profile.showfiends
-							if self.db.profile.showfiends then return print("-->>Shadowfiend Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Shadowfiend Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					snakes = {
-						order = 7,
-						type = "toggle",
-						name = "Snake Traps",
-						desc = "Toggles the showing and hiding of snake trap nameplates.",
-						get = function() return self.db.profile.showsnakes end,
-						set = function(info,val) 
-							self.db.profile.showsnakes = not self.db.profile.showsnakes
-							if self.db.profile.showsnakes then return print("-->>Snake Trap Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Snake Trap Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					wolves = {
-						order = 8,
-						type = "toggle",
-						name = "Spirit Wolves",
-						desc = "Toggles the showing and hiding of spirit wolf nameplates.",
-						get = function() return self.db.profile.showwolves end,
-						set = function(info,val) 
-							self.db.profile.showwolves = not self.db.profile.showwolves
-							if self.db.profile.showwolves then return print("-->>Spirit Wolf Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Spirit Wolf Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					treants = {
-						order = 9,
-						type = "toggle",
-						name = "Treants",
-						desc = "Toggles the showing and hiding of treant nameplates.",
-						get = function() return self.db.profile.showtreants end,
-						set = function(info,val) 
-							self.db.profile.showtreants = not self.db.profile.showtreants
-							if self.db.profile.showtreants then return print("-->>Treant Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Treant Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					elementals = {
-						order = 10,
-						type = "toggle",
-						name = "Water Elementals",
-						desc = "Toggles the showing and hiding of Water Elemental nameplates.",
-						get = function() return self.db.profile.showelementals end,
-						set = function(info,val) 
-							self.db.profile.showelementals = not self.db.profile.showelementals
-							if self.db.profile.showelementals then return print("-->>Water Elemental Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Water Elemental Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
-					ghouls = {
-						order = 11,
-						type = "toggle",
-						name = "Army Ghouls",
-						desc = "Toggles the showing and hiding of Army of the Dead Ghoul nameplates.",
-						get = function() return self.db.profile.showghouls end,
-						set = function(info,val) 
-							self.db.profile.showghouls = not self.db.profile.showghouls
-							if self.db.profile.showghouls then return print("-->>Army Ghoul Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Army Ghoul Nameplates are now |cffff0000OFF!|r<<--") end
-						end
-					},
+					},	
 				},
 			},
 			TotemsOptFrame = {
@@ -606,6 +986,8 @@ function CP:OnInitialize()
 						get = function() return self.db.profile.showtotems end,
 						set = function(info,val) 
 							self.db.profile.showtotems = not self.db.profile.showtotems
+							TidyPlates:ReloadTheme()
+							TidyPlates:ForceUpdate()
 							if self.db.profile.showtotems then return print("-->>Totem Nameplates are now |cff00ff00ON!|r<<--") else return print("-->>Totem Nameplates are now |cffff0000OFF!|r<<--") end
 						end
 					},
@@ -1078,45 +1460,61 @@ function CP:OnInitialize()
 	}
 	local defaults 	= {
 		profile = {
-			hundtext = false,
+			Boss_scale = 1.2,
+			Empty_scale = 0.3,
+			Elite_scale = 1.1,
+			Normal_scale = 0.8,
+			Pet_scale = 1,
+			Special_scale = 1.2,
+			Totem_scale = 0.8,
+			casttext = true,
+			classicons = true,
+			classiconsHeight = 22,
+			classiconsWidth = 22,
+			classiconsX = -74,
+			classiconsY = -2,
+			fcicons = true,
+			fctext = true,
+			friendlyHealthBarColor = { r = 0, g = 0, b = 0.9, a = 0.9 },
 			fullstring = false,
 			hptext = true,
-			fctext = true,
-			casttext = true,
-			fcicons = true,
-			classicons = true,
-			classiconsY = -2,
-			classiconsX = -74,
-			classiconsWidth = 22,
-			classiconsHeight = 22,
-			friendlyHealthBarColor = { r = 0, g = 0, b = 0.9, a = 0.9 },
+			hundtext = false,
+			nonTargetAlphaValue = -0.5,
 			partyicons = true,
-			partyiconsY = -2,
-			partyiconsX = -74,
-			partyiconsWidth = 22,
 			partyiconsHeight = 22,
-			totemicons = true,
+			partyiconsWidth = 22,
+			partyiconsX = -74,
+			partyiconsY = -2,
+			petIconsHeight = 22,
+			petIconsWidth = 22,
+			petIconsX = -74,
+			petIconsY = -2,
+			selectedTargetHighlightArt = "gold",
+			showBeastPetIcon = true,
+			showDemonPetIcon = true,
+			showUndeadPetIcon = true,
+			showElementalPetIcon = true,
+			showLevel = true,
+			showPetIcons = false,
+			showPetNames = true,
+			showPlayerNames = true,
+			showTargetHighlightArt = false,
+			showTotemNames = true,
+			showelementals = true,
+			showfiends = true,
+			showghouls = true,
+			showimages = true,
+			showsnakes = true,
 			showtotems = true,
+			showtreants = true,
 			showworms = true,
 			showwolves = true,
-			showtreants = true,
-			showimages = true,
-			showfiends = true,
-			showsnakes = true,
-			showelementals = true,
-			showghouls = true,
-			totems = true,
-			totemiconsWidth = 26,
+			totemicons = true,
 			totemiconsHeight = 26,
+			totemiconsWidth = 26,
 			totemiconsX = -0,
 			totemiconsY = 0,
-			Normal_scale = 0.8,
-			Elite_scale = 1.1,
-			Boss_scale = 1.2,
-			Pet_scale = 1,
-			Totem_scale = 0.8,
-			Special_scale = 1.2,
-			Empty_scale = 0.3,
+			totems = true,
 			totemList = {
 				["Fire Elemental Totem"] = true,
 				["Fire Nova Totem IX"] = true,
@@ -1172,6 +1570,11 @@ function CP:OnInitialize()
 	self.message = "Welcome to Tidy Plates: Clean Plates theme by Syronius! |cff00ffff/Type cp for additional options!|r"
 	self.db = LibStub("AceDB-3.0"):New("CPDB", defaults)
 	local db = self.db.profile
+
+	TidyPlatesThemeList.CP.normal.options.showLevel = db.showLevel
+	TidyPlatesThemeList.CP.normal.options.showName = db.showPlayerNames
+	TidyPlatesThemeList.CP.totem.options.showName = db.showTotemNames
+	TidyPlatesThemeList.CP.pet.options.showName = db.showPetNames
 	
 	TidyPlatesThemeList.CP.normal.specialArt.y = db.classiconsY
 	TidyPlatesThemeList.CP.normal.specialArt.x = db.classiconsX
@@ -1183,10 +1586,20 @@ function CP:OnInitialize()
 	TidyPlatesThemeList.CP.normal.partyIcons.height = db.partyiconsHeight
 	TidyPlatesThemeList.CP.normal.partyIcons.width = db.partyiconsWidth
 
-	TidyPlatesThemeList.CP.totem.specialArt.height = db.totemiconsHeight
-	TidyPlatesThemeList.CP.totem.specialArt.width = db.totemiconsWidth
-	TidyPlatesThemeList.CP.totem.specialArt.x = db.totemiconsX
+	TidyPlatesThemeList.CP.normal.petIcons.y = db.petIconsY
+	TidyPlatesThemeList.CP.normal.petIcons.x = db.petIconsX
+	TidyPlatesThemeList.CP.normal.petIcons.height = db.petIconsHeight
+	TidyPlatesThemeList.CP.normal.petIcons.width = db.petIconsWidth
+	TidyPlatesThemeList.CP.pet.petIcons.y = db.petIconsY
+	TidyPlatesThemeList.CP.pet.petIcons.x = db.petIconsX
+	-- pet style has larger icons for some reason prob due to scale being default to 1, need to subtract 10 from the height and width
+	TidyPlatesThemeList.CP.pet.petIcons.height = db.petIconsHeight - 10
+	TidyPlatesThemeList.CP.pet.petIcons.width = db.petIconsWidth - 10
+
 	TidyPlatesThemeList.CP.totem.specialArt.y = db.totemiconsY
+	TidyPlatesThemeList.CP.totem.specialArt.x = db.totemiconsX
+	TidyPlatesThemeList.CP.totem.specialArt.height = db.totemiconsHeight 
+	TidyPlatesThemeList.CP.totem.specialArt.width = db.totemiconsWidth 
 end
 
 --[[CP - Tidy Plates Theme]]--
@@ -1213,16 +1626,63 @@ local function GetClassIconPath(unit)
     return nil
 end
 
+function SetPetIcons(unit)
+	if not CP.db.profile.showPetIcons then 
+		return nil 
+	end
+	if (unit.type ~= "NPC") then 
+		return nil	
+	end
+	if (unit.name == "Spirit Wolf") then 
+		return nil	
+	end
+	if (unit.name == "Treant") then 
+		return nil	
+	end
+	-- Mirror images spawns with same name as player
+	local _, class = UnitClass(unit.name)
+	-- Prevent pet icons from mirror images
+	if (class =="MAGE" and unit.type == "NPC" and unit.name ~= "Water Elemental") then  
+		return nil 
+	end
+
+	local creatureType = UnitCreatureType(unit.name)
+	local db = CP.db.profile
+	-- NOTE: Humanoid must be true for player pets with the same name as players to receive icons. Only hunters can name their pets, so they share the "Beast" state.
+    local validTypes = { Beast = db.showBeastPetIcon, Demon = db.showDemonPetIcon, Elemental = db.showElementalPetIcon, Undead = db.showUndeadPetIcon, Humanoid = db.showBeastPetIcon }
+
+    if validTypes[creatureType] then
+        return classicon .. "PET"
+    end
+end
+
 function SetPartyIcons(unit)
 	if not CP.db.profile.partyicons then 
 		return nil 
 	end
-	if unit.reaction ~= "FRIENDLY" or not UnitIsPlayer(unit.name) then
+	 -- NOTE: `unit.type == "NPC"` is required to prevent party icons from appearing on player pets with the same name as players.
+	if unit.reaction ~= "FRIENDLY" or unit.type == "NPC" then
+        return nil
+    end
+	-- NOTE: Only proceed if the unit is a player and is in the party or raid.
+	if not UnitIsPlayer(unit.name) then
         return nil
     end
 
     -- Attempt to get the class icon path
     return GetClassIconPath(unit.name)
+end
+
+function SetAlpha(unit)
+	local nonTargetAlpha
+
+	if not unit.isTarget and UnitExists("target") then
+		nonTargetAlpha = CP.db.profile.nonTargetAlphaValue
+	else
+		nonTargetAlpha = 0
+	end
+
+	return (1 + nonTargetAlpha), true
 end
 
 function SetSpecialArt(unit)
@@ -1397,7 +1857,7 @@ function SetSpecialText3(unit) --[[Faction Champs Class Spec]]--
 end
 
 --[[Set Style with conditionals]]--
-local function SetStyle(unit)
+function SetStyle(unit)
 	if unit.name == "Tremor Totem"
 			or unit.name == "Cleansing Totem"
 			or unit.name == "Grounding Totem"
@@ -1503,6 +1963,11 @@ local function SetStyle(unit)
 		end
 --[[All Else]]--
 	else 
+		local _, class = UnitClass(unit.name)
+		if class == "MAGE" and unit.type == "NPC" then  
+			return CP.db.profile.showimages and "pet" or "empty"
+		end
+
 		return "normal"
 	end
 end
@@ -1544,10 +2009,12 @@ SetCVar("ShowClassColorInNameplate", 1)
 --[[Set Styles]]--
 
 TidyPlatesThemeList["CP"].SetStyle = SetStyle
+TidyPlatesThemeList["CP"].SetAlpha = SetAlpha
 TidyPlatesThemeList["CP"].SetSpecialText = SetSpecialText
 TidyPlatesThemeList["CP"].SetSpecialText2 = SetSpecialText2
 TidyPlatesThemeList["CP"].SetSpecialText3 = SetSpecialText3
 TidyPlatesThemeList["CP"].SetPartyIcons = SetPartyIcons
+TidyPlatesThemeList["CP"].SetPetIcons = SetPetIcons
 TidyPlatesThemeList["CP"].SetSpecialArt = SetSpecialArt
 TidyPlatesThemeList["CP"].SetScale = SetScale
 TidyPlatesThemeList["CP"].SetHealthbarColor = SetHealthbarColor

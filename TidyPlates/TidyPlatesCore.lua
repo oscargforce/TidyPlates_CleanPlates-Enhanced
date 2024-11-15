@@ -78,7 +78,7 @@ do
 	local fontgroup = {"name", "level", "specialText", "specialText2"}
 	local anchorgroup = {"healthborder", "threatborder", "castborder", "castnostop",
 						"name",  "specialText", "specialText2", "level",
-						"specialArt", "spellicon", "raidicon", "dangerskull", "partyIcons"}
+						"specialArt", "spellicon", "raidicon", "dangerskull", "partyIcons", "petIcons"}
 	local bargroup = {"castbar", "healthbar"}
 	
 	-- UpdateStyle: 
@@ -104,6 +104,7 @@ do
 		if styleOptions.showSpecialText2 then visual.specialText2:Show() else visual.specialText2:Hide() end
 		if styleOptions.showSpecialArt then visual.specialArt:Show() else visual.specialArt:Hide() end
 		if styleOptions.showPartyIcons then visual.partyIcons:Show() else visual.partyIcons:Hide() end
+		if styleOptions.showPetIcons then visual.petIcons:Show() else visual.petIcons:Hide() end
 		if styleOptions.showSpellIcon then visual.spellicon:Show() else visual.spellicon:Hide()  end
 		if styleOptions.showLevel and (not unit.isBoss) then visual.level:Show() else visual.level:Hide() end
 		if unit.isBoss and styleOptions.showDangerSkull then visual.dangerskull:Show() else visual.dangerskull:Hide() end
@@ -210,7 +211,7 @@ do
 		end
 	end
 	
-	-- GatherData_Alpha: Updates the 
+	-- GatherData_Alpha: Updates the Alpha on the unit
 	function UpdateIndicator_CustomAlpha()
 		-- Set Alpha
 		alpha = 1
@@ -220,7 +221,9 @@ do
 			else alpha = (alpha or 1) * (unit.alpha or 1) end
 			extended:SetAlpha(alpha) 
 			visual.highlight:SetAlpha(alpha)
-		else extended:SetAlpha(unit.alpha or 1) end
+		else 
+			extended:SetAlpha(unit.alpha or 1) 
+		end
 	end
 	
 	-- UpdateIndicator_CustomScaleText: Updates the custom indicators (text, image, alpha, scale)
@@ -242,6 +245,8 @@ do
 				visual.specialText2:SetText(activetheme.SetSpecialText2(unit)) end
 			if styleOptions.showPartyIcons and activetheme.SetPartyIcons then
 				visual.partyIcons:SetTexture(activetheme.SetPartyIcons(unit)) end
+			if styleOptions.showPetIcons and activetheme.SetPetIcons then
+				visual.petIcons:SetTexture(activetheme.SetPetIcons(unit)) end
 			if styleOptions.showSpecialArt and activetheme.SetSpecialArt then
 				visual.specialArt:SetTexture(activetheme.SetSpecialArt(unit)) end
 			if activetheme.SetHealthbarColor then
@@ -330,11 +335,8 @@ do
 	--------------------------------
 	local function GatherData_Alpha(plate)
 			-- Alpha/Targeting
-			--if printEvents then print(timeSlice, "GatherData_Alpha", plate.alpha) end
-				
-
-				unit.alpha = plate.alpha -- Set in PlateHandler's OnUpdate
-
+			-- if printEvents then print(timeSlice, "GatherData_Alpha", plate.alpha) end
+			unit.alpha = plate.alpha -- Set in PlateHandler's OnUpdate
 			unit.isTarget = HasTarget and unit.alpha == 1
 			unit.isMouseover = regions.highlight:IsShown()
 			-- GUID
@@ -408,20 +410,22 @@ do
 		regions.spellicon:SetAlpha(0)
 	end
 
-	-- CheckNameplateStyle
 	local function CheckNameplateStyle()
-		-- ERROR HERE OSCAR STYLE IS EMPTY
-		if activetheme.SetStyle then 
-			-- stylename = normal
-			stylename = activetheme.SetStyle(unit); extended.style = activetheme[stylename]
-		else extended.style = activetheme; stylename = tostring(activetheme) end
+		if activetheme.SetStyle then
+			stylename = activetheme.SetStyle(unit)
+			extended.style = activetheme[stylename]
+		else
+			extended.style = activetheme
+			stylename = tostring(activetheme)
+		end
+	
 		style = extended.style
-			
-		if extended.stylename ~= stylename or forceStyleUpdate then 
+	
+		if extended.stylename ~= stylename or forceStyleUpdate then
 			UpdateStyle()
 			extended.stylename = stylename
 		end
-		
+	
 		UpdateStubbornRegions()
 	end
 	
@@ -853,6 +857,7 @@ do
 		visual = extended.visual
 		visual.threatborder = healthbar:CreateTexture(nil, "ARTWORK")
 		visual.partyIcons = extended:CreateTexture(nil, "OVERLAY")
+		visual.petIcons = extended:CreateTexture(nil, "OVERLAY")
 		visual.specialArt = extended:CreateTexture(nil, "OVERLAY")
 		visual.specialText = healthbar:CreateFontString(nil, "OVERLAY")
 		visual.specialText2 = healthbar:CreateFontString(nil, "OVERLAY")
@@ -921,17 +926,14 @@ do
 		end
 	end
 	
-	
 	local func, runIt, existMouseover
 	-- OnUpdate: This function is processed every frame
 	function OnUpdate(self)
 		if printEvents then timeSlice = timeSlice + 1 end
 		
 		existMouseover = false
-		
 		-- This block checks for alpha and highlight changes
 		for plate in pairs(PlatesVisible) do
-			
 			-- Alpha Changes...
 			if (HasTarget) then 
 				plate.alpha = PlateGetAlpha(plate)	-- Save original alpha before reset

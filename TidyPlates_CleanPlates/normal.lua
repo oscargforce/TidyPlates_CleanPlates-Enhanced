@@ -153,6 +153,15 @@ config.partyIcons = {
 	y = -2,
 	anchor = "CENTER",
 }
+
+config.petIcons = {
+	width = 22,
+	height = 22,
+	x = -74,
+	y = -2,
+	anchor = "CENTER",
+}
+
 config.spellicon = {
 	width = 20,
 	height = 20,
@@ -178,6 +187,7 @@ config.options = {
 	showLevel = true,
 	showName = true,
 	showPartyIcons = true,
+	showPetIcons = true,
 	showSpecialArt = true,
 	showSpecialText = true,
 	showSpecialText2 = true,
