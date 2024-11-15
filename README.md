@@ -15,8 +15,9 @@ This enhanced version includes all default features of **TidyPlates_CleanPlates 
   ![Giphy healthbar](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW0xeDE5bm9pNzR3ZnRmbG93cnpieWx3NTloOGdlZTRycGZsbG4xaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yvTPxRxWPGlYYJHESS/giphy.gif)
 - **Customizable Class Icon Arts**: 
 I’ve added the ability to change class icon art styles and made it possible for party and enemy nameplates to display different icon designs.  
-  <img src="https://i.imgur.com/CjK7kFQ.png" alt="A Cute Cat" width="500" height="300">    
-  
+  <img src="https://i.imgur.com/qoTtkDn.png" alt="icon images" width="400" height="200">    
+  <img src="https://i.imgur.com/CjK7kFQ.png" alt="Image" width="500" height="300">    
+
 - 🐾 **Toggle Pet Icon**: Add pet icons next to the health bar for players in your party or raid, just like class icons. Fully customizable: adjust width, height, X, and Y positions.  
   ![Giphy Pet Icon](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTdzaXJmd25vbjVpcGFyMm5sbzUyaHA3ZzBvbnZuM2t5bDF1YWZ6ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/thcOgiRTIWz5GZno54/giphy.gif)
 - 🦄 **Creature Type Filters**: Configure which creature types should display pet icons. For instance, limit it to demons (Warlock pets) or enable it for multiple creature types.  
