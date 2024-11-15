@@ -6,6 +6,13 @@ TidyPlatesThemeList["CP"] = {}
 
 local classicon = "Interface\\Addons\\TidyPlates_CleanPlates\\Class\\"
 local totem = "Interface\\Addons\\TidyPlates_CleanPlates\\Totem\\"
+local classIconArtOptions = {
+	["Default"] = "Default", 
+	["Clean"] = "Clean",
+	["Transparent"] = "Transparent",
+	["Wowflat"] = "Wowflat",
+	["Wowround"] = "Wowround",
+}
 
 function CP:OnInitialize()
 	local options = { 
@@ -20,7 +27,7 @@ function CP:OnInitialize()
 			header = {
 				order = 2,
 				type = "header",
-				name = "Tidy Plates: Clean Plates v2.0.0",
+				name = "Tidy Plates: Clean Plates v2.0.1",
 			},
 			TextOptFrame = {
 		        order = 1,
@@ -133,8 +140,24 @@ function CP:OnInitialize()
 								get = function() return self.db.profile.classicons end,
 								set = function(info,val) 
 									self.db.profile.classicons = not self.db.profile.classicons
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
 									if self.db.profile.classicons then return print("-->>Class Icons are now |cff00ff00ON!|r<<--") else return print("-->>Class Icons are now |cffff0000OFF!|r<<--") end
 								end
+							},
+							selectedEnemyIconArt = {
+								order = 3.5,
+								type = "select",
+								name = "Select Class Icon Art",
+								desc = "Choose the art for the party icons",
+								values = classIconArtOptions,
+								get = function(info) return self.db.profile.selectedEnemyIconArt end,
+								set = function(info, value) 
+									self.db.profile.selectedEnemyIconArt = value
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
+								end,
+								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
 							},
 							classiconsWidth = {
 								type = "range",
@@ -239,6 +262,20 @@ function CP:OnInitialize()
 									if self.db.profile.partyicons then return print("-->>Party Icons are now |cff00ff00ON!|r<<--") else return print("-->>Party Icons are now |cffff0000OFF!|r<<--") end
 								end
 							},
+							selectedPartyIconArt = {
+								order = 3.5,
+								type = "select",
+								name = "Select Class Icon Art",
+								desc = "Choose the art for the party icons",
+								values = classIconArtOptions,
+								get = function(info) return self.db.profile.selectedPartyIconArt end,
+								set = function(info, value) 
+									self.db.profile.selectedPartyIconArt = value
+									TidyPlates:ForceUpdate()
+									TidyPlates:ReloadTheme()
+								end,
+								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
+							},
 							partyiconsWidth = {
 								type = "range",
 								order = 4,
@@ -253,7 +290,7 @@ function CP:OnInitialize()
 								end,								
 								step = 0.5,
 								min = 10,
-								max = 80,
+								max = 110,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -271,7 +308,7 @@ function CP:OnInitialize()
 								end,								
 								step = 0.5,
 								min = 10,
-								max = 80,
+								max = 110,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -289,7 +326,7 @@ function CP:OnInitialize()
 								end,								
 								step = 0.5,
 								min = -20,
-								max = 60,
+								max = 80,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -1489,6 +1526,8 @@ function CP:OnInitialize()
 			petIconsWidth = 22,
 			petIconsX = -74,
 			petIconsY = -2,
+			selectedEnemyIconArt = "Default",
+			selectedPartyIconArt = "Default",
 			selectedTargetHighlightArt = "gold",
 			showBeastPetIcon = true,
 			showDemonPetIcon = true,
@@ -1621,7 +1660,7 @@ C465 = "WARRIOR",
 local function GetClassIconPath(unit)
     local _, class = UnitClass(unit)
     if class then
-        return classicon .. class
+        return classicon .. CP.db.profile.selectedPartyIconArt .."\\" .. class
     end
     return nil
 end
@@ -1652,7 +1691,7 @@ function SetPetIcons(unit)
     local validTypes = { Beast = db.showBeastPetIcon, Demon = db.showDemonPetIcon, Elemental = db.showElementalPetIcon, Undead = db.showUndeadPetIcon, Humanoid = db.showBeastPetIcon }
 
     if validTypes[creatureType] then
-        return classicon .. "PET"
+        return classicon .. "Pets\\Pet"
     end
 end
 
@@ -1779,7 +1818,7 @@ function SetSpecialArt(unit)
 				local index = 0
 				for index = -2, 3 do
 					class = classByColor["C"..(r+g+b+index)]
-					if class then return classicon..class end
+					if class then  return classicon .. CP.db.profile.selectedEnemyIconArt .."\\" .. class end
 				end	
 		end
 	end 
