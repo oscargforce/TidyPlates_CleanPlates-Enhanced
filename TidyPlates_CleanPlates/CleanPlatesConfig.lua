@@ -27,7 +27,7 @@ function CP:OnInitialize()
 			header = {
 				order = 2,
 				type = "header",
-				name = "Tidy Plates: Clean Plates v2.0.1",
+				name = "Tidy Plates: Clean Plates v2.0.2",
 			},
 			TextOptFrame = {
 		        order = 1,
