@@ -388,6 +388,7 @@ function CP:OnInitialize()
 								set = function(info,v)
 									self.db.profile.petIconsWidth = v
 									TidyPlatesThemeList.CP.normal.petIcons.width = v
+									TidyPlatesThemeList.CP.pet.petIcons.width = v
 									TidyPlates:ReloadTheme()
 									TidyPlates:ForceUpdate()
 								end,								
@@ -406,6 +407,7 @@ function CP:OnInitialize()
 								set = function(info,v)
 									self.db.profile.petIconsHeight = v
 									TidyPlatesThemeList.CP.normal.petIcons.height = v
+									TidyPlatesThemeList.CP.pet.petIcons.height = v
 									TidyPlates:ReloadTheme()
 									TidyPlates:ForceUpdate()
 								end,								
@@ -424,6 +426,7 @@ function CP:OnInitialize()
 								set = function(info,v)
 									self.db.profile.petIconsY = v
 									TidyPlatesThemeList.CP.normal.petIcons.y = v
+									TidyPlatesThemeList.CP.pet.petIcons.y = v
 									TidyPlates:ReloadTheme()
 									TidyPlates:ForceUpdate()
 								end,								
@@ -442,6 +445,7 @@ function CP:OnInitialize()
 								set = function(info,v)
 									self.db.profile.petIconsX = v
 									TidyPlatesThemeList.CP.normal.petIcons.x = v
+									TidyPlatesThemeList.CP.pet.petIcons.x = v
 									TidyPlates:ReloadTheme()
 									TidyPlates:ForceUpdate()
 								end,								
@@ -1656,15 +1660,6 @@ C465 = "WARRIOR",
 --C256 = "Npc",
 }
 
--- Function to get the class icon path for a unit
-local function GetClassIconPath(unit)
-    local _, class = UnitClass(unit)
-    if class then
-        return classicon .. CP.db.profile.selectedPartyIconArt .."\\" .. class
-    end
-    return nil
-end
-
 function SetPetIcons(unit)
 	if not CP.db.profile.showPetIcons then 
 		return nil 
@@ -1678,14 +1673,15 @@ function SetPetIcons(unit)
 	if (unit.name == "Treant") then 
 		return nil	
 	end
+	
 	-- Mirror images spawns with same name as player
 	local _, class = UnitClass(unit.name)
-	-- Prevent pet icons from mirror images
-	if (class =="MAGE" and unit.type == "NPC" and unit.name ~= "Water Elemental") then  
+	local creatureType = UnitCreatureType(unit.name)
+	-- Prevent pet icons for Mage's Mirror Images, but allow Water Ele + Warlock pets (Voidwalker and Succubus) to retain their icons
+	if (class =="MAGE" and unit.type == "NPC" and unit.name ~= "Water Elemental" and creatureType ~= "Demon") then  
 		return nil 
 	end
 
-	local creatureType = UnitCreatureType(unit.name)
 	local db = CP.db.profile
 	-- NOTE: Humanoid must be true for player pets with the same name as players to receive icons. Only hunters can name their pets, so they share the "Beast" state.
     local validTypes = { Beast = db.showBeastPetIcon, Demon = db.showDemonPetIcon, Elemental = db.showElementalPetIcon, Undead = db.showUndeadPetIcon, Humanoid = db.showBeastPetIcon }
@@ -1709,7 +1705,11 @@ function SetPartyIcons(unit)
     end
 
     -- Attempt to get the class icon path
-    return GetClassIconPath(unit.name)
+	local _, class = UnitClass(unit.name)
+    if class then
+        return classicon .. CP.db.profile.selectedPartyIconArt .."\\" .. class
+    end
+    return nil
 end
 
 function SetAlpha(unit)
@@ -1818,7 +1818,7 @@ function SetSpecialArt(unit)
 				local index = 0
 				for index = -2, 3 do
 					class = classByColor["C"..(r+g+b+index)]
-					if class then  return classicon .. CP.db.profile.selectedEnemyIconArt .."\\" .. class end
+					if class then return classicon .. CP.db.profile.selectedEnemyIconArt .."\\" .. class end
 				end	
 		end
 	end 
@@ -2003,7 +2003,9 @@ function SetStyle(unit)
 --[[All Else]]--
 	else 
 		local _, class = UnitClass(unit.name)
-		if class == "MAGE" and unit.type == "NPC" then  
+		local creatureType = UnitCreatureType(unit.name)
+		-- Apply "pet" style to Mage's Mirror Images and exclude Warlock pets (Succubus and Voidwalker) from adopting the "pet" style.
+		if class == "MAGE" and unit.type == "NPC" and creatureType ~= "Demon" then  
 			return CP.db.profile.showimages and "pet" or "empty"
 		end
 
