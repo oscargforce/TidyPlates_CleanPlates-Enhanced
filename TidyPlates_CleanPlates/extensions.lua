@@ -2,24 +2,25 @@ local Media = LibStub("LibSharedMedia-3.0")
 local path = "Interface\\Addons\\TidyPlates_CleanPlates\\Artwork\\"
 local activeStyle = "normal"
 
+local iconPaths = {
+	normal = { 
+		gold = path.."CP_TargetHighlight", 
+		white = path.."CP_HealthBarHighlight"
+	},
+	totem = { 
+		gold = path.."CP_PetHighlightGold", 
+		white = path.."CP_PetHighlight"
+	},
+	pet = { 
+		gold = path.."CP_PetHighlightGold", 
+		white = path.."CP_PetHighlight"
+	},
+	empty = path.."Empty",
+	special = path.."CP_HealthBarHighlight"
+}
+
 local function UpdateTargetFrameArt(frame, unit)
 	if UnitExists("target") and unit.isTarget then
-		local iconPaths = {
-			normal = { 
-				gold = path.."CP_TargetHighlight", 
-				white = path.."CP_HealthBarHighlight"
-			},
-			totem = { 
-				gold = path.."CP_PetHighlightGold", 
-				white = path.."CP_PetHighlight"
-			},
-			pet = { 
-				gold = path.."CP_PetHighlightGold", 
-				white = path.."CP_PetHighlight"
-			},
-			empty = path.."Empty",
-			special = path.."CP_HealthBarHighlight"
-		}
 		local selectedArt = CP.db.profile.selectedTargetHighlightArt
 		local iconPath
 

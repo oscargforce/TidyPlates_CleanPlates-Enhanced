@@ -77,17 +77,6 @@ function CP:OnInitialize()
 							if self.db.profile.fullstring then return print("-->>Full HP ammount and 100\% HP Text is now |cff00ff00ON!|r<<--") else return print("-->>Full HP ammount and 100\% HP Text is now |cffff0000OFF!|r<<--") end
 						end
 					},
-					casttext = {
-						order = 5,
-						type = "toggle",
-						name = "Show Spell Cast Text",
-						desc = "Toggles the showing and hiding of Spell Cast Text",
-						get = function() return self.db.profile.casttext end,
-						set = function(info,val) 
-							self.db.profile.casttext = not self.db.profile.casttext
-							if self.db.profile.casttext then return print("-->>Spell Cast Text is now |cff00ff00ON!|r<<--") else return print("-->>Spell Cast Text is now |cffff0000OFF!|r<<--") end
-						end
-					},
 					fctextdesc = {
 						order = 6,
 						type = "description",
@@ -172,8 +161,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 80,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
 							},
@@ -190,8 +179,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 80,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
 							},
@@ -208,8 +197,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -20,
-								max = 60,
+								min = -100,
+								max = 100,
 								isPercent = false,
 								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
 							},
@@ -226,8 +215,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -80,
-								max = 80,
+								min = -100,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.classicons end,  -- Disable if classicons is false
 							},
@@ -289,8 +278,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 110,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -307,8 +296,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 110,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -325,8 +314,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -20,
-								max = 80,
+								min = -100,
+								max = 100,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -343,8 +332,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -80,
-								max = 80,
+								min = -100,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.partyicons end,  -- Disable if partyicons is false
 							},
@@ -393,8 +382,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 100,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
 							},
@@ -412,8 +401,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = 10,
-								max = 100,
+								min = 5,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
 							},
@@ -431,8 +420,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -20,
-								max = 60,
+								min = -100,
+								max = 100,
 								isPercent = false,
 								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
 							},
@@ -450,8 +439,8 @@ function CP:OnInitialize()
 									TidyPlates:ForceUpdate()
 								end,								
 								step = 0.5,
-								min = -80,
-								max = 80,
+								min = -100,
+								max = 120,
 								isPercent = false,
 								disabled = function() return not self.db.profile.showPetIcons end,  -- Disable if showPetIcons is false
 							},
@@ -1508,7 +1497,6 @@ function CP:OnInitialize()
 			Pet_scale = 1,
 			Special_scale = 1.2,
 			Totem_scale = 0.8,
-			casttext = true,
 			classicons = true,
 			classiconsHeight = 22,
 			classiconsWidth = 22,
@@ -1855,19 +1843,7 @@ function SetSpecialText(unit)
 	else return ""
 	end
 end
-function SetSpecialText2(unit)
-	if CP.db.profile.casttext then
-		local spellname
-		if unit.isCasting then 
-			spellname = UnitCastingInfo("target") 
-			if spellname == nil then
-				spellname = UnitChannelInfo("target")
-			end
-			return spellname
-		else return ""
-		end
-	end
-end
+
 function SetSpecialText3(unit) --[[Faction Champs Class Spec]]--
 	if CP.db.profile.fctext then
 	--[[Shaman]]--
@@ -2052,7 +2028,6 @@ SetCVar("ShowClassColorInNameplate", 1)
 TidyPlatesThemeList["CP"].SetStyle = SetStyle
 TidyPlatesThemeList["CP"].SetAlpha = SetAlpha
 TidyPlatesThemeList["CP"].SetSpecialText = SetSpecialText
-TidyPlatesThemeList["CP"].SetSpecialText2 = SetSpecialText2
 TidyPlatesThemeList["CP"].SetSpecialText3 = SetSpecialText3
 TidyPlatesThemeList["CP"].SetPartyIcons = SetPartyIcons
 TidyPlatesThemeList["CP"].SetPetIcons = SetPetIcons
