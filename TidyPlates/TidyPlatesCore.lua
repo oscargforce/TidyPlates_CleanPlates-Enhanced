@@ -90,14 +90,23 @@ do
 		
 		SetAnchorGroupObject(extended, style.frame, nameplate)
 		-- Anchorgroup -- ; print("   ", objectname)for i, v in pairs(style[objectname]) do print(i,v) end
-		for i = 1, #anchorgroup do objectname = anchorgroup[i]; SetAnchorGroupObject(visual[objectname], style[objectname], extended) end
+		for i = 1, #anchorgroup do 
+			objectname = anchorgroup[i]; 
+			SetAnchorGroupObject(visual[objectname], style[objectname], extended) 
+		end
 		-- Bars
-		for i = 1, #bargroup do objectname = bargroup[i]; SetBarGroupObject(bars[objectname], style[objectname], extended) end
+		for i = 1, #bargroup do 
+			objectname = bargroup[i]; 
+			SetBarGroupObject(bars[objectname], style[objectname], extended) 
+		end
 		-- Texture
 		SetObjectTexture(visual.castborder, style.castborder.texture)
 		SetObjectTexture(visual.castnostop, style.castnostop.texture)
 		-- Font Group
-		for i = 1, #fontgroup do objectname = fontgroup[i];SetFontGroupObject(visual[objectname], style[objectname]) end
+		for i = 1, #fontgroup do 
+			objectname = fontgroup[i];
+			SetFontGroupObject(visual[objectname], style[objectname]) 
+		end
 		-- Show/Hide
 		if styleOptions.showName then visual.name:Show() else visual.name:Hide() end
 		if styleOptions.showSpecialText then visual.specialText:Show() else visual.specialText:Hide() end
@@ -121,7 +130,7 @@ do
 	
 	-- UpdateIndicator_HealthBar: Updates the amounts, color, and possible text of the health bar
 	function UpdateIndicator_HealthBar()
-		local styleOptions = style.options
+		--local styleOptions = style.options
 		-- Set Health Bar
 		if activetheme.SetHealthbarColor then
 			bars.healthbar:SetStatusBarColor(activetheme.SetHealthbarColor(unit, bars))
@@ -137,8 +146,21 @@ do
 	end
 
 	-- UpdateIndicator_Name
-	function UpdateIndicator_Name() 
-		visual.name:SetText(unit.name)
+	function UpdateIndicator_Name()
+		local unitName = unit.name
+		local displayText = unitName
+		
+		if activetheme.AssignArenaNumbersToName then
+			local arenaNumber = activetheme.AssignArenaNumbersToName(unitName)
+			if arenaNumber then
+				displayText = arenaNumber
+				local numberStyle = style.arenaNumbers
+				SetObjectFont(visual.name, numberStyle.typeface, numberStyle.size)
+				SetObjectAnchor(visual.name, numberStyle.anchor, extended, numberStyle.x, numberStyle.y)
+			end
+		end
+		
+		visual.name:SetText(displayText)
 	end
 	
 	-- UpdateIndicator_Level
@@ -806,8 +828,7 @@ local ApplyPlateExtension
 do
 	local bars, regions, health, castbar, healthbar, visual
 	local region
-	
-	
+		
 	function ApplyPlateExtension(plate)
 		if printEvents then print(timeSlice, "ApplyPlateExtension", plate) end
 		Plates[plate] = true
@@ -838,6 +859,7 @@ do
 		regions.name:SetWidth( 000.1 )
 		regions.level:SetWidth( 000.1 )
 		regions.raidicon:SetAlpha( 0 )
+		
 	
 		bars.health:SetStatusBarTexture(EMPTY_TEXTURE) 
 		bars.cast:SetStatusBarTexture(EMPTY_TEXTURE) 
@@ -886,6 +908,7 @@ do
 	
 end
 
+
 --------------------------------------------------------------------------------------------------------------
 -- VII. World Update Functions: Refers new plates to 'ApplyPlateExtension()', and watches for Alpha/Transparency
 -- and Highlight/Mouseover changes, and sends those changes to the appropriate handler.
@@ -907,6 +930,7 @@ do
 	local function OnWorldFrameChange(...)
 		for index = 1, select("#", ...) do
 			plate = select(index, ...)
+	
 			if not Plates[plate] and IsFrameNameplate(plate) then
 				ApplyPlateExtension(plate)
 				if not PlateSetAlpha then
@@ -982,7 +1006,9 @@ end
 --------------------------------------------------------------------------------------------------------------
 -- VIII. Event Handlers: sends event-driven changes to  the appropriate gather/update handler.
 --------------------------------------------------------------------------------------------------------------
+
 do
+
 	local events = {}
 	local function EventHandler(self, event, ...)
 		events[event](...)
@@ -993,6 +1019,7 @@ do
 	PlateHandler:SetScript("OnEvent", EventHandler)
 	-- Events
 	function events:PLAYER_ENTERING_WORLD() PlateHandler:SetScript("OnUpdate", OnUpdate) end
+
 	function events:PLAYER_REGEN_ENABLED() InCombat = false; SetEchoUpdate(OnUpdateNameplate); if useAutoHide then SetCVar("nameplateShowEnemies", 0) end end
 	function events:PLAYER_REGEN_DISABLED() InCombat = true; SetEchoUpdate(OnUpdateNameplate); if useAutoHide then SetCVar("nameplateShowEnemies", 1) end end
 	function events:PLAYER_TARGET_CHANGED()
@@ -1035,7 +1062,7 @@ do
 			end
 		end
 	end
-	
+
 	function events:ARENA_OPPONENT_UPDATE()	
 		if IsActiveBattlefieldArena() then
 			wipe(PlayerNameToGUID)
