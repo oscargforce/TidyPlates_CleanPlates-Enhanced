@@ -1,3 +1,5 @@
+-- Target frame art ---
+local CP = LibStub("AceAddon-3.0"):GetAddon("CP")
 local Media = LibStub("LibSharedMedia-3.0")
 local path = "Interface\\Addons\\TidyPlates_CleanPlates\\Artwork\\"
 local activeStyle = "normal"
@@ -75,6 +77,7 @@ function themeEvent:ADDON_LOADED()
 	if arg1 == "TidyPlates_CleanPlates" then
 		TidyPlatesThemeList["CP"].OnInitialize = OnInitialize
 		TidyPlatesThemeList["CP"].OnUpdate = OnUpdate
+		setExtended:UnregisterEvent("ADDON_LOADED")
 	end
 end
 

@@ -146,6 +146,19 @@ theme.petIcons = {
 	anchor = "CENTER",
 }
 
+theme.arenaNumbers = {
+	typeface =					font,
+	size = 25,
+	width = 105,
+	height = 14,
+	x = 0,
+	y = 18,
+	align = "CENTER",
+	anchor = "CENTER",
+	vertical = "CENTER",
+	shadow = true,
+}
+
 theme.specialArt = {
 	width = 24,
 	height = 24,
